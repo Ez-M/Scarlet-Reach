@@ -66,7 +66,7 @@
 
 /datum/virtue/origin/racial/gronn
 	name = "Gronnic"
-	desc = "I originate from the brisk grasslands of G5ronn, a tribal confederation of northmen and half-orcs nestled in the Skol River Valley. Gronnic culture is fierce, martial and vengeful, and blood feuds still split the clans to this day.<br>"
+	desc = "I originate from the brisk grasslands of Gronn, a tribal confederation of northmen and half-orcs nestled in the Skol River Valley. Gronnic culture is fierce, martial and vengeful, and blood feuds still split the clans to this day.<br>"
 	races = list(/datum/species/halforc,
 				/datum/species/goblinp,
 				/datum/species/human/northern,
