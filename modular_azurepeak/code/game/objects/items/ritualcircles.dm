@@ -438,7 +438,7 @@
 					playsound(loc, 'sound/vo/mobs/spider/idle (3).ogg', 100, FALSE, -1)
 					if(do_after(user, 30))
 						icon_state = "dendor_active"
-						loc.visible_message(span_warning("[user] has silky webs cover their skin and then gently fall off"))
+						loc.visible_message(span_warning("[user] seizes up, suddenly covered in a mess of silky webs, which then slough away into a sticky pile!"))
 						playsound(loc, 'sound/vo/mobs/spider/pain.ogg', 100, FALSE, -1)
 						spiderkin(src)
 						user.apply_status_effect(/datum/status_effect/debuff/ritesexpended_high)
