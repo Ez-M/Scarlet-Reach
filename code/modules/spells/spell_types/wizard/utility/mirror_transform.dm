@@ -705,7 +705,7 @@
 
 		if("horn color")
 			var/obj/item/organ/horns/horns = H.getorganslot(ORGAN_SLOT_HORNS)
-			if(ears)
+			if(horns)
 				var/new_color = color_pick_sanitized(H, "Choose your primary ear color", "Ear Color One", "#FFFFFF")
 				if(new_color)
 					horns.Remove(H)
@@ -715,8 +715,8 @@
 					if(!length(colors))
 						colors = list("#FFFFFF", "#FFFFFF") // Default colors if none set
 					colors[1] = sanitize_hexcolor(new_color, 6, TRUE)
-					ears.accessory_colors = color_list_to_string(colors)
-					ears.Insert(H, TRUE, FALSE)
+					horns.accessory_colors = color_list_to_string(colors)
+					horns.Insert(H, TRUE, FALSE)
 					H.dna.features["horns_color"] = colors[1]  // Update DNA features
 					H.update_body()
 					should_update = TRUE
