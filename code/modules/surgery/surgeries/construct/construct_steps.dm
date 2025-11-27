@@ -112,8 +112,8 @@
 
 /datum/surgery_step/extract_lux/construct
 	surgery_flags = SURGERY_INCISED | SURGERY_CLAMPED | SURGERY_RETRACTED | SURGERY_BROKEN | SURGERY_CONSTRUCT
-    surgery_flags_blocked = null
-    skill_used = /datum/skill/craft/engineering
+	surgery_flags_blocked = null
+	skill_used = /datum/skill/craft/engineering
 
 /datum/surgery_step/extract_lux/construct/preop(mob/user, mob/living/target, target_zone, obj/item/tool, datum/intent/intent)
 	display_results(user, target, span_notice("I begin to extract the lux from [target]'s core... This seems like a bad idea."),
