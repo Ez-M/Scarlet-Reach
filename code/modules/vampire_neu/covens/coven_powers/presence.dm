@@ -31,8 +31,9 @@
 	var/difference = mypower - theirpower
 
 	if(difference < -2)
-		to_chat(owner, span_warning("[target]'s mind is too powerful to sway!"))
-		return FALSE
+			to_chat(target, "<span class='userlove'><b>You hesitate for a moment.</b></span>")
+			target.visible_message(span_suicide("[target] hesitates for a moment."))
+			target.Immobilize(1)
 	target.remove_overlay(MUTATIONS_LAYER)
 	var/mutable_appearance/presence_overlay = mutable_appearance('icons/effects/clan.dmi', "presence", -MUTATIONS_LAYER)
 	presence_overlay.pixel_z = 1
@@ -40,13 +41,13 @@
 	target.apply_overlay(MUTATIONS_LAYER)
 	switch(difference)
 		if(-2)
-			to_chat(target, "<span class='userlove'><b>You hesitate for a moment.</b></span>")
-			target.visible_message(span_suicide("[target] hesitates for a moment."))
-			target.Immobilize(1)
+			to_chat(target, "<span class='userlove'><b>You hesitate.</b></span>")
+			target.visible_message(span_suicide("[target] hesitates."))
+			target.Immobilize(2)
 		if(-1)
 			to_chat(target, "<span class='userlove'><b>The world becomes a little foggy...</b></span>")
 			target.visible_message(span_suicide("[target] looks dazed for a moment."))
-			target.Immobilize(2)
+			target.Immobilize(3)
 		if(0 to INFINITY)
 			if(!target.cmode)
 				to_chat(target, "<span class='userlove'><b>It wouldn't hurt to listen...</b></span>")
@@ -91,8 +92,9 @@
 	var/difference = mypower - theirpower
 
 	if(difference < -2)
-		to_chat(owner, span_warning("[target]'s mind is too powerful to sway!"))
-		return FALSE
+		to_chat(target, "<span class='userlove'><b>You hesitate for a moment.</b></span>")
+		target.visible_message(span_suicide("[target] hesitates for a moment."))
+		target.Immobilize(1)
 	target.remove_overlay(MUTATIONS_LAYER)
 	var/mutable_appearance/presence_overlay = mutable_appearance('icons/effects/clan.dmi', "presence", -MUTATIONS_LAYER)
 	presence_overlay.pixel_z = 1
@@ -103,13 +105,13 @@
 	owner.say("FEAR ME!!")
 	switch(difference)
 		if(-2)
-			to_chat(target, "<span class='userlove'><b>You hesitate for a moment.</b></span>")
-			target.visible_message(span_suicide("[target] hesitates for a moment."))
-			target.Immobilize(1)
+			to_chat(target, "<span class='userlove'><b>You hesitate.</b></span>")
+			target.visible_message(span_suicide("[target] hesitates."))
+			target.Immobilize(2)
 		if(-1)
 			to_chat(target, "<span class='userdanger'><b>You're paralyzed with fear.</b></span>")
 			target.visible_message(span_suicide("[target] freezes up."))
-			target.Immobilize(2)
+			target.Immobilize(3)
 		if(0 to INFINITY)
 			var/datum/cb = CALLBACK(target, TYPE_PROC_REF(/mob/living/carbon/human, step_away_caster), owner)
 			for(var/i in 1 to 30)
@@ -150,7 +152,9 @@
 	var/difference = mypower - theirpower
 
 	if(difference < -2)
-		to_chat(owner, span_warning("[target]'s mind is too powerful to sway!"))
+		to_chat(target, "<span class='userlove'><b>You hesitate for a moment.</b></span>")
+		target.visible_message(span_suicide("[target] hesitates for a moment."))
+		target.Immobilize(1)
 		return FALSE
 	target.remove_overlay(MUTATIONS_LAYER)
 	var/mutable_appearance/presence_overlay = mutable_appearance('icons/effects/clan.dmi', "presence", -MUTATIONS_LAYER)
@@ -160,8 +164,8 @@
 	owner.say("KNEEL!!")
 	switch(difference)
 		if(-2)
-			to_chat(target, "<span class='userlove'><b>You hesitate for a moment.</b></span>")
-			target.visible_message(span_suicide("[target] hesitates for a moment."))
+			to_chat(target, "<span class='userlove'><b>You hesitate.</b></span>")
+			target.visible_message(span_suicide("[target] hesitates."))
 			target.Immobilize(2)
 		if(-1)
 			to_chat(target, "<span class='userlove'><b>The world fogs up for a moment.</b></span>")
