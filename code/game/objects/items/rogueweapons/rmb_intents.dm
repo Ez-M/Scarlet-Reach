@@ -281,7 +281,7 @@
 
 /datum/rmb_intent/omni
 	name = "omni"
-	desc = "Intelligently attempts to apply other RMB & MMB intent actives based on the situation."
+	desc = "Intelligently attempts to apply other RMB & MMB intent actives based on the situation. (RMB on yourself or the ground triggers DEFEND, RMB on an opponent attempts to bait (if possible), kick them if they're grappling you, kick them if they're off balance and feint (in this order) otherwise.)"
 	icon_state = "rmbguard" // needs a new icon_state or something
 
 /datum/rmb_intent/omni/special_attack(mob/living/user, atom/target)
