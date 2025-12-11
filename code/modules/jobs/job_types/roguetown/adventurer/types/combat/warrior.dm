@@ -259,14 +259,14 @@
 		if("Dodge Expert + Studded Leathers") //Be the swift little shit you always wanted to be. Nothing on your head or legs to save you though!
 			ADD_TRAIT(H, TRAIT_DODGEEXPERT, TRAIT_GENERIC)
 			H.change_stat(STATKEY_SPD, 1)
-			armor = /obj/item/clothing/suit/roguetown/armor/leather/studded
+			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/leather/studded, SLOT_ARMOR, TRUE)
 			pants = /obj/item/clothing/under/roguetown/trou/leather
 			head = /obj/item/clothing/head/roguetown/bucklehat
 		if("Cuirass + Rotbite Immune") //Closer to traditional Monster Hunter. You are a tinge smarter - and immune to deadite bites)
 			ADD_TRAIT(H, TRAIT_MEDIUMARMOR, TRAIT_GENERIC)
 			ADD_TRAIT(H, TRAIT_ZOMBIE_IMMUNE, TRAIT_GENERIC)
 			H.change_stat(STATKEY_INT, 1)
-			armor =	/obj/item/clothing/suit/roguetown/armor/plate/half/fluted/ornate
+			H.equip_to_slot_or_del(new /obj/item/clothing/suit/roguetown/armor/plate/half/fluted/ornate, SLOT_ARMOR, TRUE)
 			pants = /obj/item/clothing/under/roguetown/splintlegs
 			beltl = pick(
 					/obj/item/reagent_containers/glass/bottle/alchemical/strpot,
