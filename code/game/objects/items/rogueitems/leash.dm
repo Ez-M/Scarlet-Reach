@@ -469,10 +469,12 @@
 		collar.icon_state = /obj/item/clothing/neck/roguetown/collar/cowbell::icon_state
 		collar.desc = "A leather collar with a jingly cowbell attached."
 		collar.name = "cowbell collar"
+		collar.AddComponent(/datum/component/squeak, SFX_COLLARJANGLE, 50, 100, 1)
 	else
 		collar.icon_state = /obj/item/clothing/neck/roguetown/collar/catbell::icon_state
 		collar.desc = "A leather collar with a jingling catbell attached."
 		collar.name = "catbell collar"
+		collar.AddComponent(/datum/component/squeak, SFX_COLLARJINGLE, 50, 100, 1)
 	target.update_inv_neck()
 	forceMove(collar) // move us inside the collar so that if we salvage it, we get the bell back
 
