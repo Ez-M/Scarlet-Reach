@@ -721,12 +721,12 @@
 			var/draw_color = mutation_color || species_color || skin_tone
 			if(rotted || (owner && HAS_TRAIT(owner, TRAIT_ROTMAN)))
 				draw_color = SKIN_COLOR_ROT
-		if(owner && HAS_TRAIT(owner, TRAIT_DVERGR))
-			draw_color = SKIN_COLOR_SSHANNTYNLAN
-			if(draw_color)
-				limb.color = "#[draw_color]"
-				if(aux)
-					aux.color = "#[draw_color]"
+			if(owner && HAS_TRAIT(owner, TRAIT_DVERGR))
+				draw_color = SKIN_COLOR_SSHANNTYNLAN
+				if(draw_color)
+					limb.color = "#[draw_color]"
+					if(aux)
+						aux.color = "#[draw_color]"
 
 		// Cache the base appearances
 		cached_base_appearances = _list_copy(.)
