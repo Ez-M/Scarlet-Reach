@@ -102,7 +102,10 @@
 	for(var/obj/item/bodypart/affecting as anything in bodyparts)
 		if(affecting.body_part & (LEG_RIGHT | LEG_LEFT))
 			if(!check_disabled || !affecting.disabled)
-				.++
+				if((affecting.body_part & LEGS) == LEGS)
+					. += 2
+				else
+					.++
 
 //sometimes we want to ignore that we don't have the required amount of legs.
 /mob/proc/get_leg_ignore()
