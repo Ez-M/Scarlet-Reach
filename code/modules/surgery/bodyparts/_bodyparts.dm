@@ -168,6 +168,12 @@
 		QDEL_NULL(bandage)
 	for(var/datum/wound/wound as anything in wounds)
 		qdel(wound)
+	if(embedded_objects && length(embedded_objects))
+		for(var/obj/item/embedded as anything in embedded_objects)
+			embedded_objects -= embedded
+			if(!QDELETED(embedded))
+				qdel(embedded)
+		embedded_objects = null
 	return ..()
 
 /obj/item/bodypart/onbite(mob/living/carbon/human/user)

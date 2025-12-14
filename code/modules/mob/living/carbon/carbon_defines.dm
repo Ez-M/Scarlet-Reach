@@ -95,3 +95,5 @@
 	var/icon_update_scheduled_time = 0
 	/// Cached key for damage overlay state - invalidated when damage state changes
 	var/damage_overlay_cache_key
+	/// Cached key for body overlay state (facial features, etc) - invalidated when body state changes
+	var/body_overlay_cache_key

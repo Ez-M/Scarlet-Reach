@@ -64,6 +64,13 @@ There are several things that need to be remembered:
 	return
 
 /mob/living/carbon/human/update_body()
+	var/obj/item/bodypart/head/HD = get_bodypart(BODY_ZONE_HEAD)
+	var/new_cache_key = "[HD ? HD.skeletonized : "nohead"]|[HAS_TRAIT(src, TRAIT_HUSK)]|[lip_style]|[lip_color]|[gender]|[dna?.species?.hairyness]|[hair_color]"
+
+	if(body_overlay_cache_key == new_cache_key)
+		return
+	body_overlay_cache_key = new_cache_key
+
 	dna.species.handle_body(src)
 	..()
 
@@ -104,32 +111,32 @@ There are several things that need to be remembered:
 
 /// Generates a cache key for current damage overlay state
 /mob/living/carbon/human/proc/generate_damage_overlay_key()
-	var/list/key_parts = list()
-	key_parts += gender
-	key_parts += dna?.species?.type || "none"
+	var/key = "[gender]|[dna?.species?.type]|"
 
-	for(var/obj/item/bodypart/BP as anything in bodyparts)
-		key_parts += BP.body_zone
-		key_parts += BP.brutestate
-		key_parts += BP.burnstate
-		key_parts += BP.skeletonized
-		key_parts += BP.bleeding
-		key_parts += length(BP.embedded_objects)
-		key_parts += BP.bandage?.type || "nobandage"
-		key_parts += BP.bandage?.color || ""
-
-		// Wound overlays
-		for(var/datum/wound/wound as anything in BP.wounds)
-			if(wound?.mob_overlay)
-				key_parts += wound.mob_overlay
-
-	// Clothing that affects hidechest
 	if(gender == FEMALE || dna?.species?.use_f)
-		key_parts += wear_armor?.flags_inv & HIDEBOOB ? "hideboob_armor" : ""
-		key_parts += wear_shirt?.flags_inv & HIDEBOOB ? "hideboob_shirt" : ""
-		key_parts += cloak?.flags_inv & HIDEBOOB ? "hideboob_cloak" : ""
+		key += wear_armor?.flags_inv & HIDEBOOB ? "1" : "0"
+		key += wear_shirt?.flags_inv & HIDEBOOB ? "1" : "0"
+		key += cloak?.flags_inv & HIDEBOOB ? "1" : "0"
+	else
+		key += "000"
+	key += "|"
 
-	return key_parts.Join("|")
+	// Bodypart states
+	for(var/obj/item/bodypart/BP as anything in bodyparts)
+		key += "[BP.body_zone][BP.brutestate][BP.burnstate]"
+		key += BP.skeletonized ? "S" : "N"
+		key += BP.bleeding > 0 ? "B" : "N"
+		key += "[length(BP.embedded_objects)]"
+		key += BP.bandage ? "b[BP.bandage.color]" : "n"
+
+		// Wound overlays - only add if present
+		if(BP.wounds && length(BP.wounds))
+			for(var/datum/wound/wound in BP.wounds)
+				if(wound.mob_overlay)
+					key += wound.mob_overlay
+		key += "|"
+
+	return key
 
 /mob/living/carbon/human/proc/update_damage_overlays_real()
 	if(dna?.species?.update_damage_overlays(src))
@@ -168,20 +175,21 @@ There are several things that need to be remembered:
 		var/list/damage_overlays = list()
 		var/list/legdam_overlays = list()
 		var/list/armdam_overlays = list()
-		var/g = use_female_icon ? BP.offset_f : BP.offset
+
 		if(BP.body_zone == BODY_ZONE_HEAD)
 			needs_hair_update = TRUE
 
 		var/bleed_checker = FALSE
-		var/list/wound_overlays
 		var/body_zone = BP.body_zone
 		var/aux_zone = BP.aux_zone
 
-		// Calculate pixel offsets early so we can pass them to cache function
-		var/used_offset = is_female ? BP.offset_f : BP.offset
-		var/has_offset = (used_offset in offset_features)
-		var/offset_x = has_offset ? offset_features[g][1] : 0
-		var/offset_y = has_offset ? offset_features[g][2] : 0
+		var/used_offset = use_female_icon ? BP.offset_f : BP.offset
+		var/offset_x = 0
+		var/offset_y = 0
+		if(used_offset in offset_features)
+			var/list/offset_data = offset_features[used_offset]
+			offset_x = offset_data[1]
+			offset_y = offset_data[2]
 
 		if(!BP.skeletonized)
 			if(BP.brutestate)
@@ -200,14 +208,14 @@ There are several things that need to be remembered:
 					damage_overlays += get_cached_damage_overlay(limb_icon, "[body_zone]_b", DAMAGE_LAYER, offset_x, offset_y, bandage_color)
 					legdam_overlays += get_cached_damage_overlay(limb_icon, "legdam_[body_zone]_b", LEG_DAMAGE_LAYER, offset_x, offset_y, bandage_color)
 					armdam_overlays += get_cached_damage_overlay(limb_icon, "armdam_[body_zone]_b", ARM_DAMAGE_LAYER, offset_x, offset_y, bandage_color)
-			wound_overlays = list()
-			for(var/datum/wound/wound as anything in BP.wounds)
-				if(wound?.mob_overlay)
-					wound_overlays |= wound.mob_overlay
-			for(var/wound_overlay in wound_overlays)
-				damage_overlays += get_cached_damage_overlay(limb_icon, "[body_zone]_[wound_overlay]", DAMAGE_LAYER, offset_x, offset_y)
-				legdam_overlays += get_cached_damage_overlay(limb_icon, "legdam_[body_zone]_[wound_overlay]", LEG_DAMAGE_LAYER, offset_x, offset_y)
-				armdam_overlays += get_cached_damage_overlay(limb_icon, "armdam_[body_zone]_[wound_overlay]", ARM_DAMAGE_LAYER, offset_x, offset_y)
+
+			if(BP.wounds && length(BP.wounds))
+				for(var/datum/wound/wound as anything in BP.wounds)
+					if(wound?.mob_overlay)
+						var/wound_overlay = wound.mob_overlay
+						damage_overlays += get_cached_damage_overlay(limb_icon, "[body_zone]_[wound_overlay]", DAMAGE_LAYER, offset_x, offset_y)
+						legdam_overlays += get_cached_damage_overlay(limb_icon, "legdam_[body_zone]_[wound_overlay]", LEG_DAMAGE_LAYER, offset_x, offset_y)
+						armdam_overlays += get_cached_damage_overlay(limb_icon, "armdam_[body_zone]_[wound_overlay]", ARM_DAMAGE_LAYER, offset_x, offset_y)
 
 		if(!bleed_checker && BP.bandage)
 			var/bandage_color = BP.bandage.color
@@ -230,17 +238,21 @@ There are several things that need to be remembered:
 					damage_overlays += get_cached_damage_overlay(limb_icon, "[aux_zone]_b", DAMAGE_LAYER, offset_x, offset_y, bandage_color)
 					legdam_overlays += get_cached_damage_overlay(limb_icon, "legdam_[aux_zone]_b", LEG_DAMAGE_LAYER, offset_x, offset_y, bandage_color)
 					armdam_overlays += get_cached_damage_overlay(limb_icon, "armdam_[aux_zone]_b", ARM_DAMAGE_LAYER, offset_x, offset_y, bandage_color)
-				for(var/wound_overlay in wound_overlays)
-					damage_overlays += get_cached_damage_overlay(limb_icon, "[aux_zone]_[wound_overlay]", DAMAGE_LAYER, offset_x, offset_y)
-					legdam_overlays += get_cached_damage_overlay(limb_icon, "legdam_[aux_zone]_[wound_overlay]", LEG_DAMAGE_LAYER, offset_x, offset_y)
-					armdam_overlays += get_cached_damage_overlay(limb_icon, "armdam_[aux_zone]_[wound_overlay]", ARM_DAMAGE_LAYER, offset_x, offset_y)
+
+				if(BP.wounds && length(BP.wounds))
+					for(var/datum/wound/wound as anything in BP.wounds)
+						if(wound?.mob_overlay)
+							var/wound_overlay = wound.mob_overlay
+							damage_overlays += get_cached_damage_overlay(limb_icon, "[aux_zone]_[wound_overlay]", DAMAGE_LAYER, offset_x, offset_y)
+							legdam_overlays += get_cached_damage_overlay(limb_icon, "legdam_[aux_zone]_[wound_overlay]", LEG_DAMAGE_LAYER, offset_x, offset_y)
+							armdam_overlays += get_cached_damage_overlay(limb_icon, "armdam_[aux_zone]_[wound_overlay]", ARM_DAMAGE_LAYER, offset_x, offset_y)
 			if(!bleed_checker && BP.bandage)
 				var/bandage_color = BP.bandage.color
 				damage_overlays += get_cached_damage_overlay(limb_icon, "[aux_zone]_b", DAMAGE_LAYER, offset_x, offset_y, bandage_color)
 				legdam_overlays += get_cached_damage_overlay(limb_icon, "legdam_[aux_zone]_b", LEG_DAMAGE_LAYER, offset_x, offset_y, bandage_color)
 				armdam_overlays += get_cached_damage_overlay(limb_icon, "armdam_[aux_zone]_b", ARM_DAMAGE_LAYER, offset_x, offset_y, bandage_color)
 
-		// Pixel offsets are now applied in the cache, so we can directly add the overlays
+
 		limb_overlaysa += damage_overlays
 		limb_overlaysb += legdam_overlays
 		limb_overlaysc += armdam_overlays
