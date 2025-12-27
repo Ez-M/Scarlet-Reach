@@ -1920,7 +1920,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 						is_legacy = FALSE
 						ShowChoices(user)
 						return
-					if(length(new_rumour) > 500)
+					if(length(new_rumour) > 400)
 						to_chat(user, "<span class='warning'>Rumours cannot exceed 500 characters.</span>")
 						ShowChoices(user)
 						return
@@ -1944,7 +1944,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 						is_legacy = FALSE
 						ShowChoices(user)
 						return
-					if(length(new_gossip) > 500)
+					if(length(new_gossip) > 400)
 						to_chat(user, "<span class='warning'>Noble gossip cannot exceed 500 characters.</span>")
 						ShowChoices(user)
 						return
