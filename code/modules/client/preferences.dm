@@ -1911,13 +1911,17 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					log_game("[user] has set their OOC notes'.")
 				if("rumour")
 					to_chat(user, "<span class='notice'>["<span class='bold'>Rumours are things others might know, or think they know about you, they don't necessarily have to be precise, or even true. But remember that they can provide a hint to another player on how to interact with, or even think about your character.</span>"]</span>")
-					var/new_rumour = tgui_input_text(user, "Input rumours about your character:", "Rumours", rumour, multiline = TRUE, encode = FALSE, bigmodal = TRUE)
+					var/new_rumour = tgui_input_text(user, "Input rumours about your character: (500 Character Limit)", "Rumours", rumour, multiline = TRUE, encode = FALSE, bigmodal = TRUE)
 					if(new_rumour == null)
 						return
 					if(new_rumour == "")
 						rumour = null
 						rumour_display = null
 						is_legacy = FALSE
+						ShowChoices(user)
+						return
+					if(length(new_rumour) > 500)
+						to_chat(user, "<span class='warning'>Rumours cannot exceed 500 characters.</span>")
 						ShowChoices(user)
 						return
 					rumour = new_rumour
@@ -1931,7 +1935,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 
 				if("gossip")
 					to_chat(user, "<span class='notice'>["<span class='bold'>Gossip is rumours spread around, and known only in Noble circles, only other well-born individuals are aware of it. Gossip, similarly to standard rumours does not need to be precise or true, but remember that it can provide hints and avenues for other Nobles to interact with, and judge your Character.</span>"]</span>")
-					var/new_gossip = tgui_input_text(user, "Input noble gossip about your character:", "Noble Gossip", gossip, multiline = TRUE, encode = FALSE, bigmodal = TRUE)
+					var/new_gossip = tgui_input_text(user, "Input noble gossip about your character: (500 Character Limit)", "Noble Gossip", gossip, multiline = TRUE, encode = FALSE, bigmodal = TRUE)
 					if(new_gossip == null)
 						return
 					if(new_gossip == "")
@@ -1940,12 +1944,15 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 						is_legacy = FALSE
 						ShowChoices(user)
 						return
+					if(length(new_gossip) > 500)
+						to_chat(user, "<span class='warning'>Noble gossip cannot exceed 500 characters.</span>")
+						ShowChoices(user)
+						return
 					gossip = new_gossip
 					var/g = gossip
 					g = html_encode(g)
 					g = replacetext(parsemarkdown_basic(g), "\n", "<BR>")
 					gossip_display = g
-					// Keep the legacy/alternate name in sync for examine checks
 					rumour_noble = gossip
 					rumour_noble_display = gossip_display
 					is_legacy = FALSE
