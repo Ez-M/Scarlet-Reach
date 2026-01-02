@@ -255,10 +255,17 @@
 	if(L.patron?.type == /datum/patron/divine/xylix)
 		return
 
-	L.visible_message(
-		span_warning("[L] slips upon the Rune of Trickery!"),
-		span_danger("The rune betrays your footing!")
+	var/list/messages = list(
+		"[L] slips on the Rune of Trickery!",
+		"[L] is betrayed by the rune beneath their feet!",
+		"[L] forgets how walking works atop the rune!",
+		"[L] stumbles as the rune mocks them!",
+		"[L] is humbled by ancient geometry!"
 	)
+
+	var/message = pick(messages)
+
+	L.visible_message(span_warning(message))
 
 	L.AdjustKnockdown(2)
 	
